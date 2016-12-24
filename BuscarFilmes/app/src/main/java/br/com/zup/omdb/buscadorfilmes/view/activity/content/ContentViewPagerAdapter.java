@@ -4,9 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import java.util.ArrayList;
-
 import br.com.zup.omdb.buscadorfilmes.view.fragment.movielist.MovieListFragment;
+import br.com.zup.omdb.buscadorfilmes.view.fragment.moviesearch.MovieSearchFragment;
 
 /**
  * Created by wesleygoes on 23/12/16.
@@ -14,8 +13,6 @@ import br.com.zup.omdb.buscadorfilmes.view.fragment.movielist.MovieListFragment;
 
 public class ContentViewPagerAdapter extends FragmentPagerAdapter {
 
-    private ArrayList<Fragment> mFragmentList =  new ArrayList<>();
-    private ArrayList<String> mFragmentListTitles = new ArrayList<>();
 
     private final String[] mTitles = {"Filmes","Inserir"};
 
@@ -26,10 +23,10 @@ public class ContentViewPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         switch (position) {
-            case 0: //BalanceFragment
+            case 0:
                 return new MovieListFragment();
-            case 1: //NextPaymentFragment
-                return new MovieListFragment();
+            case 1:
+                return new MovieSearchFragment();
         }
         return null;
 

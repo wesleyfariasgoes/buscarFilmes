@@ -52,7 +52,6 @@ public class MovieListFragment extends Fragment implements OnMovieListFragment {
         recyclerView    = (RecyclerView) view.findViewById(R.id.recycler_list);
         layoutManager   = new LinearLayoutManager(getActivity());
         recyclerView    .setLayoutManager(layoutManager);
-
         adapter         = new ListMovieAdapter(this);
         recyclerView    .setAdapter(adapter);
     }
