@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center"
-            card_view:cardCornerRadius="2dp"
+            card_view:cardCornerRadius="5dp"
             card_view:contentPadding="10dp">
 
             <LinearLayout

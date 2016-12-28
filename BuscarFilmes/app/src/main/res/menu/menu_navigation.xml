@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/list_movie"
+        android:title="@string/lista"
+        android:icon="@drawable/ic_format_list_numbers_black_18dp"
+        />
+
+    <item
+        android:id="@+id/home_movie"
+        android:title="@string/inicio"
+        android:icon="@drawable/ic_home_black_24dp"/>
+
+
+    <item
+        android:id="@+id/search_movie"
+        android:title="@string/buscar"
+        android:icon="@drawable/ic_search_black_24dp"/>
+
+
+</menu>

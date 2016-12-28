@@ -6,4 +6,5 @@ package br.com.zup.omdb.buscadorfilmes.view.fragment.moviesearch;
 public interface OnMovieSearchView {
     void showMessage(String message);
     void setMovieError();
+    void setTransfer();
 }

@@ -32,20 +32,8 @@ public class ContentActivity extends AppCompatActivity  {
         mViewpager.setAdapter(new ContentViewPagerAdapter(getSupportFragmentManager()));
         mTabLayout.setupWithViewPager(mViewpager);
 
-        mTabLayout.getTabAt(0).setIcon(R.drawable.ic_format_list_numbers_black_18dp);
-        mTabLayout.getTabAt(1).setIcon(R.drawable.ic_format_list_numbers_black_18dp);
+        mTabLayout.getTabAt(0).setIcon(R.drawable.ic_home_black_24dp);
+        mTabLayout.getTabAt(1).setIcon(R.drawable.ic_done_black_24dp);
     }
 
-//    public void enviar(String contatos) {
-//        ContatoitemFragment contatoitemFragment = new ContatoitemFragment();
-//        Bundle args = new Bundle();
-//        args.putString("contato", contatos);
-//        contatoitemFragment.setArguments(args);
-//
-//        getSupportFragmentManager()
-//                .beginTransaction()
-//                .replace(R.id.content, contatoitemFragment) // replace flContainer
-//                .addToBackStack(null)
-//                .commit();
-//    }
 }

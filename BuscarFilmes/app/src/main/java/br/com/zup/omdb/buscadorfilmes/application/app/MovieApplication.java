@@ -1,42 +1,58 @@
 package br.com.zup.omdb.buscadorfilmes.application.app;
 
 import android.app.Application;
+import android.content.Context;
 
-import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.j256.ormlite.dao.Dao;
+import java.util.HashMap;
 
-import java.sql.SQLException;
-
-import br.com.zup.omdb.buscadorfilmes.model.domain.Movie;
-import br.com.zup.omdb.buscadorfilmes.persistence.DataBaseHelper;
+import br.com.zup.omdb.buscadorfilmes.business.AmbienteManager;
 
 /**
  * Created by wesleygoes on 24/12/16.
  */
 
 public class MovieApplication extends Application {
-    private DataBaseHelper databaseHelper = null;
-    private Dao<Movie, Integer> movieDAO = null;
+    private static MovieApplication singleton = null;
+    private HashMap<String, Object> attributes = new HashMap<String, Object>();
+    private final String OMDB = "OMDB";
+
+    public static MovieApplication getInstance() {
+        return singleton;
+    }
+
+    public MovieApplication() {
+        singleton = this;
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        databaseHelper = new DataBaseHelper(this);
+        AmbienteManager ambienteManager = AmbienteManager.getInstance();
+        ambienteManager.startSession( getApplicationContext() );
+        put(AmbienteManager.KEY, ambienteManager);
+        singleton = this;
+
     }
 
-    public Dao<Movie, Integer> getMovieDAO() throws SQLException{
-        if(movieDAO == null){
-            movieDAO = databaseHelper.getDao(Movie.class);
-        }
-        return movieDAO;
+    public Context getContext(){
+        return getApplicationContext();
     }
 
-    @Override
-    public void onTerminate() {
-        super.onTerminate();
-        if (databaseHelper != null) {
-            OpenHelperManager.releaseHelper();
-            databaseHelper = null;
-        }
+    public void setAttributes(HashMap<String, Object> attributes) {
+        this.attributes = attributes;
     }
+
+    public HashMap<String, Object> getAttributes() {
+        return attributes;
+    }
+
+    public void put(final String key, final Object value) {
+        this.attributes.put(key, value);
+    }
+
+    public Object get(final String key) {
+        return this.attributes.get(key);
+    }
+
 }
+

@@ -3,4 +3,19 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="item">Item</string>
+    <string name="inicio">Inicio</string>
+    <string name="buscar">Buscar</string>
+    <string name="lista">Lista</string>
+    <string name="registerNo">Filme já registrado</string>
+    <string name="registerOk">Filme registrado com Sucesso</string>
+    <string name="a_lista_vazia">A Lista está vazia</string>
+
+    <string name="success">Atenção</string>
+    <string name="text">Deseja apagar?</string>
+    <string name="ok">OK</string>
+
+    <string name="operation">Deletar</string>
+    <string name="content_text">Você está prestes a deletar a pesquisa</string>
+    <string name="cancel">Cancelar</string>
 </resources>

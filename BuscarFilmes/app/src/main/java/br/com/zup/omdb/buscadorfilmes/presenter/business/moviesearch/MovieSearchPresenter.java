@@ -1,6 +1,5 @@
 package br.com.zup.omdb.buscadorfilmes.presenter.business.moviesearch;
 
-import br.com.zup.omdb.buscadorfilmes.application.utils.WrapperLog;
 import br.com.zup.omdb.buscadorfilmes.view.fragment.moviesearch.OnMovieSearchView;
 
 /**
@@ -19,12 +18,10 @@ public class MovieSearchPresenter  implements OnMovieSearchPresenter, OnFinishSe
 
     @Override
     public void insertUser(String title) {
-//        if(title.equals("title")){
 //
-//        }
-        WrapperLog.info("LOG AQUI"+ title);
         interactor.insert(title,this);
         onMovieSearchView.showMessage("Title "+title);
+        listMovies();
     }
 
     @Override
@@ -34,7 +31,7 @@ public class MovieSearchPresenter  implements OnMovieSearchPresenter, OnFinishSe
 
     @Override
     public void listMovies() {
-
+        onMovieSearchView.setTransfer();
     }
 
 
