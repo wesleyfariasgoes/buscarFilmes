@@ -27,7 +27,52 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
+    <RelativeLayout
+        android:id="@+id/progress_init_app"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.7"
+        android:background="@android:color/black"
+        android:clickable="true">
 
+        <ProgressBar
+            android:id="@+id/progress_main"
+            android:layout_width="50px"
+            android:layout_height="50px"
+            android:layout_centerInParent="true"
+            android:indeterminate="true" />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/rl_progress_main_with_text"
+        android:layout_width="600px"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="95px"
+        android:layout_marginRight="95px"
+        android:background="@android:color/white"
+        android:visibility="gone"
+        android:alpha="1"
+        android:padding="40px">
+
+        <ProgressBar
+            android:id="@+id/progress_main_with_text"
+            android:layout_width="50px"
+            android:layout_height="50px"
+            android:layout_marginRight="20px"
+            android:layout_centerVertical="true"
+            android:indeterminate="true" />
+
+        <TextView
+            android:id="@+id/txt_progress_main_with_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/progress_main_with_text"
+            android:text="texto"
+            android:textColor="#3e3e3e"
+            android:textSize="30dp" />
+    </RelativeLayout>
 
 
     <FrameLayout

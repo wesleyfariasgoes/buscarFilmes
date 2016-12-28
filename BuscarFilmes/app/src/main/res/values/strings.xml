@@ -18,4 +18,6 @@
     <string name="operation">Deletar</string>
     <string name="content_text">Você está prestes a deletar a pesquisa</string>
     <string name="cancel">Cancelar</string>
+
+    <string name="text_offline">Você está no modo off line, mas pode pesquisar o filme mais tarde!</string>
 </resources>

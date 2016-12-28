@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,9 +16,12 @@ import br.com.zup.omdb.buscadorfilmes.view.fragment.movielist.MovieListFragment;
 import br.com.zup.omdb.buscadorfilmes.view.fragment.moviesearch.MovieSearchFragment;
 
 public class MainActivity extends AbstractFragmentActivity {
-    private TextView               mTxtEmpty;
-    protected BottomNavigationView bottomNavigationView;
-    private Toolbar toolbar;
+    private TextView                 mTxtEmpty;
+    private transient TextView       textLoading;
+    private transient View           viewLoadingText;
+    private transient View           viewLoading;
+    protected BottomNavigationView   bottomNavigationView;
+    private Toolbar                  toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,8 +29,8 @@ public class MainActivity extends AbstractFragmentActivity {
         toolbar        = (Toolbar) findViewById(R.id.toolbarMain);
         toolbar        .setTitle("Buscador de Filmes");
         setSupportActionBar(toolbar);
-
         binds();
+        viewLoading.setVisibility(View.GONE);
 
     }
 
@@ -34,8 +38,13 @@ public class MainActivity extends AbstractFragmentActivity {
     private void binds() {
         MovieListFragment fragment = (MovieListFragment) registerFragment(ControlFrags.LIST);
         replaceFragment(ControlFrags.LIST,false);
-        bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigationView);
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        bottomNavigationView        = (BottomNavigationView) findViewById(R.id.bottomNavigationView);
+        this.viewLoading            = findViewById(R.id.progress_init_app);
+        this.viewLoadingText        = findViewById(R.id.rl_progress_main_with_text);
+        this.textLoading            = (TextView) viewLoadingText.findViewById(R.id.txt_progress_main_with_text);
+
+        bottomNavigationView        .setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.list_movie) {
@@ -75,5 +84,15 @@ public class MainActivity extends AbstractFragmentActivity {
     public void showMovieSearch() {
         MovieSearchFragment fragment = (MovieSearchFragment) registerFragment(ControlFrags.SEARCH);
         replaceFragment(ControlFrags.SEARCH,false);
+    }
+
+    @Override
+    public void showLoading(boolean visible) {
+        if (!visible) {
+            viewLoadingText.setVisibility(View.GONE);
+            viewLoading.setVisibility(View.GONE);
+        } else {
+            viewLoading.setVisibility(View.VISIBLE);
+        }
     }
 }

@@ -12,13 +12,8 @@ import br.com.zup.omdb.buscadorfilmes.model.domain.Movie;
 public interface OnMovieListFragment {
     void replaceFragment(int position);
     void showMessage(String message);
-
     void setItems(List<Movie> movies);
-
     void onClickListener(View view, int position);
-
-    void onDelete(Movie movie);
-
     void upDateList(Movie movie,String title);
     void onSetItemMovie(Movie itemMovie);
     void setDeleteButton(Movie movie);

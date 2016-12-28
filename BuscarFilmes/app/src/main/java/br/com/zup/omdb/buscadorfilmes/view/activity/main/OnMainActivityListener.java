@@ -16,7 +16,7 @@ public interface OnMainActivityListener {
     void showMovieList();
     void showPutMovieList(Bundle args);
     void showMovieSearch();
-
+    void showLoading(final boolean visible);
     AbstractFragment getAFragment(ControlFrags frag);
 
 

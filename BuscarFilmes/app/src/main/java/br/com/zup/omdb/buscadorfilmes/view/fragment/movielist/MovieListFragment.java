@@ -1,6 +1,6 @@
 package br.com.zup.omdb.buscadorfilmes.view.fragment.movielist;
 
-import android.content.Context;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import java.util.List;
@@ -33,7 +32,7 @@ import retrofit2.Response;
  * Created by wesleygoes on 23/12/16.
  */
 
-public class MovieListFragment extends AbstractFragment implements OnMovieListFragment{
+public class MovieListFragment extends AbstractFragment implements OnMovieListFragment {
 
     private RecyclerView            recyclerView;
     private TextView                mTxtEmpty;
@@ -42,19 +41,18 @@ public class MovieListFragment extends AbstractFragment implements OnMovieListFr
     RecyclerView.LayoutManager      layoutManager;
     RecyclerView.Adapter            adapter;
     private List<Movie>             moviesList;
+    private Movie                   moviess;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_movie_list, (ViewGroup) null);
-
-        mRestClient         = new RestClient();
-        moviesList          = MovieBO.getInstance().getMovies();
+        rootView             = inflater.inflate(R.layout.fragment_movie_list, (ViewGroup) null);
+        moviess              = MovieBO.getInstance().getMovieSelection();
+        mRestClient          = new RestClient();
+        moviesList           = MovieBO.getInstance().getMovies();
         onBackPress(null);
-//        getActivity().getSupportFragmentManager().popBackStack();
         binds(rootView);
-        hideKeyboard();
         return rootView;
     }
 
@@ -66,13 +64,14 @@ public class MovieListFragment extends AbstractFragment implements OnMovieListFr
 
     private void binds(View view) {
 
-        recyclerView        = (RecyclerView) view.findViewById(R.id.recycler_list);
-        layoutManager       = new LinearLayoutManager(getActivity());
-        mTxtEmpty           = (TextView) view.findViewById(R.id.txt_empty);
-        recyclerView        .setLayoutManager(layoutManager);
-        recyclerView        .addOnItemTouchListener(new MovieListPresenter(getActivity(),recyclerView,this));
-        presenter           = new MovieListPresenter(getActivity(),recyclerView,this);
-        mTxtEmpty           .setVisibility(View.GONE);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_list);
+        layoutManager = new LinearLayoutManager(getActivity());
+        mTxtEmpty = (TextView) view.findViewById(R.id.txt_empty);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addOnItemTouchListener(new MovieListPresenter(getActivity(), recyclerView, this));
+        presenter = new MovieListPresenter(getActivity(), recyclerView, this);
+        mTxtEmpty.setVisibility(View.GONE);
+
     }
 
     @Override
@@ -98,10 +97,10 @@ public class MovieListFragment extends AbstractFragment implements OnMovieListFr
 
     @Override
     public void setItems(final List<Movie> movies) {
-        if (movies.isEmpty() || movies == null){
+        if (movies.isEmpty() || movies == null) {
             mTxtEmpty.setVisibility(View.VISIBLE);
-        }else {
-            recyclerView.setAdapter(new ListMovieAdapter(getActivity(),movies,getActivity(), this));
+        } else {
+            recyclerView.setAdapter(new ListMovieAdapter(getActivity(), movies, getActivity(), this));
             mTxtEmpty.setVisibility(View.GONE);
         }
     }
@@ -112,65 +111,61 @@ public class MovieListFragment extends AbstractFragment implements OnMovieListFr
     }
 
     @Override
-    public void onDelete(Movie movie) {
-//        presenter.onDelete(movie);
-    }
-
-    @Override
     public void upDateList(final Movie movie, final String title) {
 
-        Call<Movie> call =mRestClient.getApi().getMovie(movie.getTitle().toString().trim(), "sort", "json");
-        call.enqueue(new Callback<Movie>() {
-//            final ProgressDialog dialog = ProgressDialog.show(getActivity(), "", "carregando...");
-            @Override
-            public void onResponse(Call<Movie> call, Response<Movie> response) {
-                Movie inputMovie = response.body();
-//                dialog.dismiss();
-                if (inputMovie == null) {
+            final ProgressDialog dialog = ProgressDialog.show(getActivity(), "", "carregando...");
+            Call<Movie> call = mRestClient.getApi().getMovie(movie.getTitle().toString().trim(), "sort", "json");
+            call.enqueue(new Callback<Movie>() {
+                @Override
+                public void onResponse(Call<Movie> call, Response<Movie> response) {
+                    Movie inputMovie = response.body();
+                    dialog.dismiss();
+                    if (inputMovie == null) {
 
-                    ResponseBody responseBody = response.errorBody();
-                    if (responseBody != null) {
-//                        Toast.makeText(getContext(), "responseBody:" + responseBody, Toast.LENGTH_SHORT).show();
-                        //                            Toast.makeText(getContext(), "responseBody = " + responseBody.string(), Toast.LENGTH_SHORT).show();
+                        ResponseBody responseBody = response.errorBody();
+                        if (responseBody != null) {
+                            WrapperLog.info("RESPONSE 1" + responseBody);
+                        } else {
+                            WrapperLog.info("RESPONSE 2" + responseBody);
+                        }
                     } else {
-//                        Toast.makeText(getContext(), "responseBody = " + responseBody, Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    if (inputMovie.getResponse() != null && inputMovie.getResponse().equalsIgnoreCase("True")){
-                        Movie item = new Movie();
-                        item.setId(movie.getId());
-                        item.setTitle(movie.getTitle());
-                        item.setActors(inputMovie.getActors());
-                        item.setDirector(inputMovie.getDirector());
-                        item.setGenre(inputMovie.getGenre());
-                        item.setPlot(inputMovie.getPlot());
-                        item.setAwards(inputMovie.getAwards());
-                        item.setImdbID(inputMovie.getImdbID());
-                        item.setRuntime(inputMovie.getRuntime());
-                        item.setRated(inputMovie.getRated());
-                        item.setReleased(inputMovie.getReleased());
-                        item.setLanguage(inputMovie.getLanguage());
-                        item.setCountry(inputMovie.getCountry());
-                        item.setMetascore(inputMovie.getMetascore());
-                        item.setWriter(inputMovie.getWriter());
-                        item.setYear(inputMovie.getYear());
-                        item.setPoster(inputMovie.getPoster());
-                        item.setType(inputMovie.getType());
+                        if (inputMovie.getResponse() != null && inputMovie.getResponse().equalsIgnoreCase("True")) {
+                            Movie item = new Movie();
+                            item.setId(movie.getId());
+                            item.setTitle(movie.getTitle());
+                            item.setActors(inputMovie.getActors());
+                            item.setDirector(inputMovie.getDirector());
+                            item.setGenre(inputMovie.getGenre());
+                            item.setPlot(inputMovie.getPlot());
+                            item.setAwards(inputMovie.getAwards());
+                            item.setImdbID(inputMovie.getImdbID());
+                            item.setRuntime(inputMovie.getRuntime());
+                            item.setRated(inputMovie.getRated());
+                            item.setReleased(inputMovie.getReleased());
+                            item.setLanguage(inputMovie.getLanguage());
+                            item.setCountry(inputMovie.getCountry());
+                            item.setMetascore(inputMovie.getMetascore());
+                            item.setWriter(inputMovie.getWriter());
+                            item.setYear(inputMovie.getYear());
+                            item.setPoster(inputMovie.getPoster());
+                            item.setType(inputMovie.getType());
 
-                        MovieBO.getInstance().addFilmes(item);
+                            MovieBO.getInstance().addFilmes(item);
 
-                    }else{
+                        } else {
 //                        Message.showAlertCrouton(getActivity(),"Filme "+movie.getTitle()+" não encontrado.");
+                        }
+
                     }
-
                 }
-            }
 
-            @Override
-            public void onFailure(Call<Movie> call, Throwable t) {
-            }
+                @Override
+                public void onFailure(Call<Movie> call, Throwable t) {
+                    dialog.dismiss();
+                }
 
-        });
+            });
+
     }
 
     @Override
@@ -187,21 +182,15 @@ public class MovieListFragment extends AbstractFragment implements OnMovieListFr
         super.onDestroy();
     }
 
-    private void hideKeyboard() {
-        View view = getActivity().getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-    }
 
     public void setTransfer() {
         Intent negativeActivity = new Intent(getActivity(), MainActivity.class);
         startActivity(negativeActivity);
     }
+
     @Override
-    public void setDeleteButton(final Movie movie){
-        WrapperLog.info("DELETE "+movie.getTitle());
+    public void setDeleteButton(final Movie movie) {
+        WrapperLog.info("DELETE " + movie.getTitle());
         new PromptDialog(getActivity())
                 .setDialogType(PromptDialog.DIALOG_TYPE_WARNING)
                 .setAnimationEnable(true)
@@ -218,4 +207,7 @@ public class MovieListFragment extends AbstractFragment implements OnMovieListFr
 
 
     }
+
+
+
 }

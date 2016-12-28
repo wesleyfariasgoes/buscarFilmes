@@ -6,20 +6,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import br.com.zup.omdb.buscadorfilmes.R;
+import br.com.zup.omdb.buscadorfilmes.application.connection.ConnectionTestHandler;
+import br.com.zup.omdb.buscadorfilmes.application.connection.ConnectionTestThread;
+import br.com.zup.omdb.buscadorfilmes.application.connection.listener.OnConnectionTestListener;
 import br.com.zup.omdb.buscadorfilmes.application.utils.WrapperLog;
 import br.com.zup.omdb.buscadorfilmes.model.domain.Movie;
 import br.com.zup.omdb.buscadorfilmes.model.facade.MovieBO;
+import cn.refactor.lib.colordialog.PromptDialog;
 
 /**
  * Created by wesleygoes on 27/12/16.
  */
 
-public class MovieDetailActivity extends AppCompatActivity {
+public class MovieDetailActivity extends AppCompatActivity implements OnConnectionTestListener {
     private TextView txtDirector;
     private TextView txtactor;
     private TextView txtType;
@@ -99,8 +104,33 @@ public class MovieDetailActivity extends AppCompatActivity {
                     .into(poster);
 
         }else {
+            connectionTest();
+        }
+    }
 
-//            connectionTest();
+
+
+        private void connectionTest() {
+            new ConnectionTestThread(this, new ConnectionTestHandler(this)).start();
+        }
+
+    @Override
+    public void endConnectionTest(Boolean connection) {
+        if (connection) {
+            Toast.makeText(MovieDetailActivity.this,"Com conexão ",Toast.LENGTH_LONG).show();
+        }else{
+            new PromptDialog(this)
+                    .setDialogType(PromptDialog.DIALOG_TYPE_WARNING)
+                    .setAnimationEnable(true)
+                    .setTitleText(getString(R.string.success))
+                    .setContentText(getString(R.string.text_offline))
+                    .setPositiveListener(getString(R.string.ok), new PromptDialog.OnPositiveListener() {
+                        @Override
+                        public void onClick(PromptDialog dialog) {
+                            dialog.dismiss();
+
+                        }
+                    }).show();
         }
     }
 }

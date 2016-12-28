@@ -72,8 +72,15 @@ public class MovieSearchFragment extends AbstractFragment implements OnMovieSear
 
     @Override
     public void setTransfer() {
-        Intent negativeActivity = new Intent(getActivity(), MainActivity.class);
-        startActivity(negativeActivity);
+        Message.showConfirmationCrouton(getActivity(),getString(R.string.registerOk));
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent negativeActivity = new Intent(getActivity(), MainActivity.class);
+                startActivity(negativeActivity);
+            }
+        },1000);
+
 
     }
 
@@ -87,18 +94,9 @@ public class MovieSearchFragment extends AbstractFragment implements OnMovieSear
                 Message.showAlertCrouton(getActivity(), getString(R.string.registerNo));
                 mBtSave.setEnabled(true);
             }else{
-
                 presenter.insertUser(mEdtName.getText().toString());
                 clear();
                 setTransfer();
-                Message.showConfirmationCrouton(getActivity(),getString(R.string.registerOk));
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        mBtSave.setEnabled(true);
-                    }
-                },1000);
 
             }
         }else{
