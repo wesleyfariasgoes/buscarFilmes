@@ -34,5 +34,12 @@ public class MovieSearchPresenter  implements OnMovieSearchPresenter, OnFinishSe
         onMovieSearchView.setTransfer();
     }
 
+    @Override
+    public void onDestroy() {
+        if(onMovieSearchView  != null){
+            onMovieSearchView = null;
+        }
+    }
+
 
 }

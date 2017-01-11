@@ -9,5 +9,5 @@ public interface OnListMovieInteractor {
 
     void findItems(OnListMovieActionFinish listener);
 
-    void deletItem(Movie movie);
+    void deletItem(Movie movie,OnListMoviePresenter listener);
 }

@@ -10,7 +10,6 @@ import android.view.View;
 import java.util.List;
 
 import br.com.zup.omdb.buscadorfilmes.model.domain.Movie;
-import br.com.zup.omdb.buscadorfilmes.model.facade.MovieBO;
 import br.com.zup.omdb.buscadorfilmes.view.fragment.movielist.OnMovieListFragment;
 
 /**
@@ -52,7 +51,12 @@ public class MovieListPresenter implements OnListMoviePresenter, OnListMovieActi
 
     @Override
     public void onDelete(Movie movie) {
-        onListBookInteractor.deletItem(movie);
+        onListBookInteractor.deletItem(movie,this);
+    }
+
+    @Override
+    public void refreshView() {
+        mOnListMovieView.refresh();
     }
 
 
@@ -63,7 +67,6 @@ public class MovieListPresenter implements OnListMoviePresenter, OnListMovieActi
 
     @Override
     public void onFinished(List<Movie> movies) {
-        List<Movie> filmes = MovieBO.getInstance().getMovies();
         mOnListMovieView.setItems(movies);
     }
 

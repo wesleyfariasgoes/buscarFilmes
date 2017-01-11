@@ -1,6 +1,8 @@
 package br.com.zup.omdb.buscadorfilmes.view.fragment.movielist;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,8 +10,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import br.com.zup.omdb.buscadorfilmes.R;
@@ -19,7 +23,6 @@ import br.com.zup.omdb.buscadorfilmes.model.domain.Movie;
 import br.com.zup.omdb.buscadorfilmes.model.facade.MovieBO;
 import br.com.zup.omdb.buscadorfilmes.presenter.business.movielist.MovieListPresenter;
 import br.com.zup.omdb.buscadorfilmes.presenter.business.movielist.OnListMoviePresenter;
-import br.com.zup.omdb.buscadorfilmes.view.activity.main.MainActivity;
 import br.com.zup.omdb.buscadorfilmes.view.fragment.AbstractFragment;
 import br.com.zup.omdb.buscadorfilmes.view.fragment.moviedetail.MovieDetailActivity;
 import cn.refactor.lib.colordialog.PromptDialog;
@@ -39,50 +42,127 @@ public class MovieListFragment extends AbstractFragment implements OnMovieListFr
     private OnListMoviePresenter    presenter;
     private RestClient              mRestClient;
     RecyclerView.LayoutManager      layoutManager;
-    RecyclerView.Adapter            adapter;
-    private List<Movie>             moviesList;
+    private ListMovieAdapter        adapter;
+    private List<Movie>             filmesList;
     private Movie                   moviess;
+    private int                     contador = 0;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        WrapperLog.info("Script "+ "onAtach "+activity);
+    }
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstance) {
+        super.onCreate(savedInstance);
+        WrapperLog.info("Script "+ "onCreate "+savedInstance);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+        super.onCreateView(inflater,container,savedInstanceState);
+
+
         rootView             = inflater.inflate(R.layout.fragment_movie_list, (ViewGroup) null);
-        moviess              = MovieBO.getInstance().getMovieSelection();
-        mRestClient          = new RestClient();
-        moviesList           = MovieBO.getInstance().getMovies();
+
         onBackPress(null);
+        WrapperLog.info("Script "+ "CONTADOR  "+contador);
+
         binds(rootView);
         return rootView;
     }
 
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        moviess              = MovieBO.getInstance().getMovieSelection();
+        mRestClient          = new RestClient();
+
+        setReenterTransition(true);
+        hideKeyboard();
+        WrapperLog.info("Script "+ "onActivityCreated  "+savedInstanceState);
+    }
+
+
+    public void listFilmes(){
+        filmesList           = new ArrayList<>();
+        filmesList           = MovieBO.getInstance().getMovies();
     }
 
     private void binds(View view) {
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_list);
-        layoutManager = new LinearLayoutManager(getActivity());
         mTxtEmpty = (TextView) view.findViewById(R.id.txt_empty);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addOnItemTouchListener(new MovieListPresenter(getActivity(), recyclerView, this));
-        presenter = new MovieListPresenter(getActivity(), recyclerView, this);
-        mTxtEmpty.setVisibility(View.GONE);
 
+        listFilmes();
+
+        setAdapter();
+//        recyclerView.addOnItemTouchListener(new MovieListPresenter(getActivity(), recyclerView, this));
+        presenter = new MovieListPresenter(getActivity(), recyclerView, this);
+
+    }
+
+    private void setAdapter() {
+        adapter = new ListMovieAdapter(getActivity(), filmesList, getActivity(), this);
+        if(recyclerView != null){
+            layoutManager = new LinearLayoutManager(getActivity());
+            recyclerView.setLayoutManager(layoutManager);
+            recyclerView.setAdapter(adapter);
+            mTxtEmpty.setVisibility(View.GONE);
+        }else{
+            mTxtEmpty.setVisibility(View.VISIBLE);
+
+        }
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+//        WrapperLog.info("Script "+ "onStart() ");
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+//        WrapperLog.info("Script "+ "onDestroyView() ");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        presenter.onResume();
+        contador++;
+//        presenter.onResume();
+        WrapperLog.info("Script "+ "onResume() "+contador);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+//        WrapperLog.info("Script "+ "onPause() ");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+//        WrapperLog.info("Script "+ "onStop() ");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+//        WrapperLog.info("Script "+ "onDestroy() ");
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        WrapperLog.info("Script "+ "onSaveInstanceState "+outState);
+//        outState.putInt("contador",contador);
     }
 
     @Override
@@ -97,12 +177,13 @@ public class MovieListFragment extends AbstractFragment implements OnMovieListFr
 
     @Override
     public void setItems(final List<Movie> movies) {
-        if (movies.isEmpty() || movies == null) {
-            mTxtEmpty.setVisibility(View.VISIBLE);
-        } else {
-            recyclerView.setAdapter(new ListMovieAdapter(getActivity(), movies, getActivity(), this));
-            mTxtEmpty.setVisibility(View.GONE);
-        }
+//        if (movies.isEmpty() || movies == null) {
+//            mTxtEmpty.setVisibility(View.VISIBLE);
+//        } else {
+//            adapter = new ListMovieAdapter(getActivity(), movies, getActivity(), this);
+//            recyclerView.setAdapter(adapter);
+//            mTxtEmpty.setVisibility(View.GONE);
+//        }
     }
 
     @Override
@@ -177,15 +258,11 @@ public class MovieListFragment extends AbstractFragment implements OnMovieListFr
         getActivity().overridePendingTransition(R.anim.abc_slide_in_bottom, R.anim.abc_slide_out_bottom);
     }
 
+
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-
-    public void setTransfer() {
-        Intent negativeActivity = new Intent(getActivity(), MainActivity.class);
-        startActivity(negativeActivity);
+    public void refresh() {
+        setAdapter();
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -201,13 +278,18 @@ public class MovieListFragment extends AbstractFragment implements OnMovieListFr
                     public void onClick(PromptDialog dialog) {
                         dialog.dismiss();
                         presenter.onDelete(movie);
-                        setTransfer();
                     }
                 }).show();
 
 
     }
 
-
+    private void hideKeyboard() {
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
 
 }

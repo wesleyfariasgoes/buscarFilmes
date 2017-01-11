@@ -7,4 +7,5 @@ package br.com.zup.omdb.buscadorfilmes.presenter.business.moviesearch;
 public interface OnFinishSearchListener {
     void onMovieError();
     void listMovies();
+    void onDestroy();
 }

@@ -9,4 +9,5 @@ public interface OnListMoviePresenter {
     void showMessage();
     void onResume();
     void onDelete(Movie movie);
+    void refreshView();
 }

@@ -10,4 +10,5 @@ import br.com.zup.omdb.buscadorfilmes.model.domain.Movie;
 public interface OnListMovieActionFinish {
 
     void onFinished(List<Movie> movies);
+
 }

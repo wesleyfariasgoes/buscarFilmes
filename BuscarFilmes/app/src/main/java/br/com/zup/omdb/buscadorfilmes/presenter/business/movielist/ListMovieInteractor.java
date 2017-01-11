@@ -21,7 +21,8 @@ public class ListMovieInteractor implements OnListMovieInteractor {
     }
 
     @Override
-    public void deletItem(Movie movie) {
+    public void deletItem(Movie movie,OnListMoviePresenter listener) {
         MovieBO.getInstance().deleteInventory(movie);
+        listener.refreshView();
     }
 }

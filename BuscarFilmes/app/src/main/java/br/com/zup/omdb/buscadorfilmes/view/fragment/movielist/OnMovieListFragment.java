@@ -16,5 +16,6 @@ public interface OnMovieListFragment {
     void onClickListener(View view, int position);
     void upDateList(Movie movie,String title);
     void onSetItemMovie(Movie itemMovie);
+    void refresh();
     void setDeleteButton(Movie movie);
 }
